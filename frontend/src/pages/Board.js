@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Container } from 'react-bootstrap';
+import { Container,InputGroup,FormControl, Button } from 'react-bootstrap';
 import List from '../components/Board/List';
 import ListFooter from '../components/Board/ListFooter';
 import * as request from '../lib/request';
@@ -8,7 +8,9 @@ import * as request from '../lib/request';
 class Board extends Component {
     constructor(props) {
         super(props);
-
+        this.form = {
+            searchText : createRef(),
+        }
         this.state = {
             list: [],
             searchText:"",
@@ -20,8 +22,9 @@ class Board extends Component {
         const result = await this.getData("",1);
         this.setState({ list: result.list, totalPages: result.totalPages });
     }
-    async Search(text)
+    async Search()
     {
+        let text = this.form.searchText.current.value;
         const result = await this.getData(text,1);
         this.setState({list : result.list, searchText : text, currentPage: 1, totalPages: result.totalPages});
     }
@@ -38,6 +41,12 @@ class Board extends Component {
     render() {
         return (
             <Container>
+                <InputGroup className="mb-3">
+                    <FormControl placeholder="검색할 제목을 입력하세요." ref={this.form.searchText} />
+                    <InputGroup.Append>
+                        <Button variant="outline-secondary" onClick={this.Search}>검색</Button>
+                    </InputGroup.Append>
+                </InputGroup>
                 <List data={this.state.list} />
                 <ListFooter totalPages={this.state.totalPages} currentPage={this.state.currentPage} changePage={this.chagnePage.bind(this)} />
             </Container>
