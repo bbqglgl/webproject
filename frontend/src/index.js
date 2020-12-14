@@ -1,13 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createStore } from 'redux'
+import reducers from './reducers';
+import { Provider } from 'react-redux'
 import './index.css';
 import App from './App';
+import { RenderAfterNavermapsLoaded } from 'react-naver-maps';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <RenderAfterNavermapsLoaded ncpClientId="4nr363jm3d"
+    error={<p>Maps Load Error</p>}
+    loading={<p>Maps Loading...</p>}
+  >
+    <Provider store={createStore(reducers)}>
+      <App />
+    </Provider>
+  </RenderAfterNavermapsLoaded>,
   document.getElementById('root')
 );
 
