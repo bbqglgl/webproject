@@ -38,8 +38,8 @@ export class App extends React.Component {
       return(
       <>
         <Switch>
-            <Route path="/" component={Login} />
             <Route exact path="/Auth/Join" component={Join} />
+            <Route path="/" component={Login} />
         </Switch>
         </>);
     }

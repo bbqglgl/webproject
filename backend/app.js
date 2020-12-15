@@ -17,7 +17,7 @@ mongoose.connect('mongodb://localhost:27017/webProject', {
 mongooseAutoInc.initialize(mongoose.connection);
 
 var corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: '*',
   credentials : true,
 }
 

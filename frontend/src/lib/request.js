@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 //Backend는 3001port에서 동작중이므로 주소를 설정한다.
-const API_DEFAULT = "http://localhost:3001/";
+const API_DEFAULT = "";
 axios.defaults.withCredentials = true;
 const instance = axios.create({ baseURL: API_DEFAULT });
 

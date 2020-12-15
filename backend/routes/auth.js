@@ -39,6 +39,7 @@ router.get('/logout', function (req, res, next) {
   req.session.destroy();
   res.status(200).end();
 });
+
 /* GET users listing. */
 router.post('/join', function (req, res, next) {
   const user = new User({
