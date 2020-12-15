@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Form, Button, Alert } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { local_login } from '../../actions/auth';
+import * as request from '../../lib/request';
 
 class LoginForm extends Component {
 
@@ -22,6 +26,25 @@ class LoginForm extends Component {
             </Alert>
         );
     }
+    async submit(e) {
+        e.preventDefault();
+        const email = this.form.email.current.value;
+        const password = this.form.password.current.value;
+        let msg = await request.Login(email, password);
+
+        if(typeof(msg) !== "string")
+        {
+            this.props.local_login(msg.data._id, msg.data.email);
+            console.log(this.props);
+            this.props.history.push("/");
+        }
+        else
+            alert(msg);
+    }
+    join()
+    {
+        this.props.history.push("/Auth/Join");
+    }
     render() {
         return (
             <Form>
@@ -41,14 +64,20 @@ class LoginForm extends Component {
                     <Form.Check type="checkbox" label="Check me out" />
                 </Form.Group>
                 {this.ErrorText(this.state.ErrorText)}
-                <Button variant="primary" type="submit">
-                    Submit
+                <Button variant="primary" onClick={this.submit.bind(this)}>
+                    로그인
                     </Button>
-                <Button variant="primary" type="submit">
-                    Join
+                <Button variant="primary" onClick={this.join.bind(this)}>
+                    가입하기
                     </Button>
             </Form>
         );
     }
 }
-export default LoginForm;
+const mapStateToProps = state => { return state; };
+
+const mapDispatchToProps = dispatch => ({
+    local_login: (_id, email) => dispatch(local_login(_id, email)),
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LoginForm));

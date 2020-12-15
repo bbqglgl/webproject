@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Form, Button, Alert } from 'react-bootstrap';
+import * as request from '../../lib/request';
 
 class JoinForm extends Component {
 
@@ -7,7 +9,8 @@ class JoinForm extends Component {
         super(props);
         this.state = {
             ErrorText: '',
-            passwordMsg: ''
+            passwordMsg: '',
+            canJoin:false
         }
         this.form = {
             email: React.createRef(),
@@ -30,11 +33,22 @@ class JoinForm extends Component {
             return;
         if(this.form.password.current.value !== e.target.value)
         {
-            this.setState({passwordMsg : "비밀번호가 다릅니다. 확인해주세요."});
+            this.setState({passwordMsg : "비밀번호가 다릅니다. 확인해주세요.", canJoin:false});
             return;
         }
-        this.setState({passwordMsg : ""});
+        this.setState({passwordMsg : "", canJoin:true});
         return;
+    }
+    async submit(e) {
+        e.preventDefault();
+        const email = this.form.email.current.value;
+        const password = this.form.password.current.value;
+        let msg = await request.join(email, password);
+        
+        if(msg === null)
+            this.props.history.push("/");
+        else
+            alert(msg);
     }
     render() {
         return (
@@ -59,11 +73,11 @@ class JoinForm extends Component {
                     </Form.Text>
                 </Form.Group>
                 {this.ErrorText(this.state.ErrorText)}
-                <Button variant="primary" type="submit">
+                <Button variant="primary" onClick={this.submit.bind(this)} disabled={!this.state.canJoin}>
                     Join
                     </Button>
             </Form>
         );
     }
 }
-export default JoinForm;
+export default withRouter(JoinForm);

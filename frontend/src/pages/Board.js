@@ -20,6 +20,7 @@ class Board extends Component {
     }
     async componentDidMount() {
         const result = await this.getData("",1);
+        console.log(result);
         this.setState({ list: result.list, totalPages: result.totalPages });
     }
     async Search()
@@ -35,7 +36,7 @@ class Board extends Component {
     }
     async getData(text, page)
     {
-        return await request.getBoardByTitle(text, page);
+        return (await request.getBoardByTitle(text, page)).data;
     }
 
     render() {

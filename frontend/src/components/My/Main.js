@@ -6,6 +6,8 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Container,ListGroup } from 'react-bootstrap';
 import * as request from '../../lib/request';
+import { connect } from 'react-redux';
+import { local_logout } from '../../actions/auth';
 
 class MyList extends Component {
     constructor(props) {
@@ -34,6 +36,20 @@ class MyList extends Component {
         return await request.getMyList(page);
     }
 
+    async logout()
+    {
+        if(this.props.auth[0].isLogin)
+        {
+            let t = await request.Logout();
+            if(t === null)
+            {
+                this.props.local_logout();
+                this.props.history.push("/");
+            }
+            else
+                alert(t);
+        }
+    }
     render() {
         return (
             <Container>
@@ -48,7 +64,7 @@ class MyList extends Component {
                         비밀번호 변경
                     </ListGroup.Item>
                     </Link>
-                    <ListGroup.Item action>
+                    <ListGroup.Item onClick={this.logout.bind(this)} action>
                         로그아웃
                     </ListGroup.Item>
                 </ListGroup>
@@ -56,5 +72,10 @@ class MyList extends Component {
         );
     }
 }
+const mapStateToProps = state => { return state; };
 
-export default withRouter(MyList);
+const mapDispatchToProps = dispatch => ({
+    local_logout: () => dispatch(local_logout()),
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MyList));

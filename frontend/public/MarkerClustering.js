@@ -531,10 +531,9 @@ Cluster.prototype = {
 
 		var map = this._markerClusterer.getMap();
 
-		this._relation = naver.maps.Event.addListener(this._clusterMarker, 'click', naver.maps.Util.bind(function(e) {
-			Callback(e.coord, map.getZoom());
-			//map.morph(e.coord, map.getZoom() + 1);
-		}, this));
+		this._relation = naver.maps.Event.addListener(this._clusterMarker, 'click', ()=> {
+			Callback(this.getCenter(), map.getZoom());
+		});
 	},
 
 	/**

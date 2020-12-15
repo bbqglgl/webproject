@@ -15,7 +15,7 @@ class Home extends Component {
             show : false
         };
     }
-
+    static t = null;
     handleClose = () => this.setState({show:false});
     handleOpen = () => this.setState({show:true});
 
@@ -29,7 +29,7 @@ class Home extends Component {
                         width: '100%',
                         height: '600px',
                     }}
-                    defaultCenter={{ lat: 37.3595704, lng: 127.105399 }}
+                    defaultCenter={{ lat:37.2830223, lng:127.0435122 }}
                     defaultZoom={15}
                     naverRef={ref => { this.mapRef = ref }}
                 >
@@ -47,49 +47,52 @@ class Home extends Component {
     {
         let mapRef = window.naver.maps;
         let instance = this.mapRef.instance;
-        let t = [{position:new mapRef.LatLng(37.3595704, 127.105399)},{position:new mapRef.LatLng(37.3595700, 127.105399)},{position:new mapRef.LatLng(37.3595704, 127.105390)},{position:new mapRef.LatLng(37.3590704, 127.105399)}]
-        
         if(!markers)
         {
             markers = [];
-
-            for (let i = 0, ii = t.length; i < ii; i++) {
-                let marker = new mapRef.Marker(t[i]);
-                markers.push(marker);
-            }
         }
         var htmlMarker1 = {
             content: '<div style="cursor:pointer;width:40px;height:40px;line-height:30px;font-size:12px;color:black;text-align:center;font-weight:bold;background:url(/marker.png);background-size:contain;"></div>',
             size: mapRef.Size(40, 40),
             anchor: mapRef.Point(20, 20)
         };
-        console.log(mapRef);
-        new window.MarkerClustering({
-            minClusterSize: 1,
-            maxZoom: 22,
-            map: instance,
-            markers: markers,
-            disableClickZoom: false,
-            gridSize: gridSize,
-            icons: [htmlMarker1],
-            indexGenerator: [10],
-            averageCenter: true,
-            stylingFunction: function(clusterMarker, count) {
-                $(clusterMarker.getElement()).find('div:first-child').text(count);
-            }
-        }, this.showTipsList.bind(this));
-        console.log(this.showTipsList);
+
+        if(Home.t===null)
+        {
+            Home.t=new window.MarkerClustering({
+                minClusterSize: 1,
+                maxZoom: 22,
+                map: instance,
+                markers: markers,
+                disableClickZoom: false,
+                gridSize: gridSize,
+                icons: [htmlMarker1],
+                indexGenerator: [10],
+                averageCenter: true,
+                stylingFunction: function (clusterMarker, count) {
+                    $(clusterMarker.getElement()).find('div:first-child').text(count);
+                }
+            }, this.showTipsList.bind(this));
+        }
+        else
+        {
+            Home.t.setMarkers(markers);
+            Home.t._redraw();
+        }
     }
     async showTipsList(location, zoomLevel)
     {
         console.log(location);
         console.log(zoomLevel);
         this.handleOpen();
-        let result = await request.getBoardByTitle("", 1);
-        this.setState({data:result.list});
+        let result = await request.getTipsByGeo(location, zoomLevel);
+        this.setState({data:result});
     }
-
-    componentDidMount() {
+    componentWillUnmount()
+    {
+        Home.t=null;
+    }
+    async componentDidMount() {
         
         let mapRef = window.naver.maps;
         let instance = this.mapRef.instance;
@@ -124,8 +127,15 @@ class Home extends Component {
                 }, (e)=>{console.log(e)}, options)
             });
         });
-        this.setMyCurrentLocation();
-        this.showTipsInMap(null)
+        mapRef.Event.addListener(instance, 'dragend', ()=>this.dragHandler(instance));
+        //this.setMyCurrentLocation();
+        let result = await request.getMarkerByGeo(instance.getCenter(), instance.getZoom());
+        this.showTipsInMap(result);
+    }
+    async dragHandler(instance)
+    {
+        let result = await request.getMarkerByGeo(instance.getCenter(), instance.getZoom());
+        this.showTipsInMap(result);
     }
     setMyCurrentLocation () {
         let mapRef = window.naver.maps;

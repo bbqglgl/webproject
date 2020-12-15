@@ -9,14 +9,9 @@ import { RenderAfterNavermapsLoaded } from 'react-naver-maps';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-  <RenderAfterNavermapsLoaded ncpClientId="4nr363jm3d"
-    error={<p>Maps Load Error</p>}
-    loading={<p>Maps Loading...</p>}
-  >
     <Provider store={createStore(reducers)}>
       <App />
-    </Provider>
-  </RenderAfterNavermapsLoaded>,
+    </Provider>,
   document.getElementById('root')
 );
 

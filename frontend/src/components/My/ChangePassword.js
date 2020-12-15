@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
+import * as request from '../../lib/request';
 
 class ChangePassword extends Component {
 
@@ -28,13 +29,27 @@ class ChangePassword extends Component {
     {
         if(e.target.value.length === 0)
             return;
-        if(this.form.password.current.value !== e.target.value)
+        if(this.form.newPassword.current.value !== e.target.value)
         {
             this.setState({passwordMsg : "비밀번호가 다릅니다. 확인해주세요."});
             return;
         }
         this.setState({passwordMsg : ""});
         return;
+    }
+    async submit(e) {
+        e.preventDefault();
+        const oldP = this.form.oldPassword.current.value;
+        const newP = this.form.newPassword.current.value;
+        let msg = await request.ChangePassword(oldP, newP);
+
+        if(typeof(msg) !== "string")
+        {
+            alert("비밀번호가 변경되었습니다.")
+            this.props.history.push("/");
+        }
+        else
+            alert(msg);
     }
     render() {
         return (
@@ -51,13 +66,13 @@ class ChangePassword extends Component {
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>새 비밀번호 확인</Form.Label>
-                    <Form.Control type="password" placeholder="Password" onChange={this.checkConfirmPassword}/>
+                    <Form.Control type="password" placeholder="Password" onChange={this.checkConfirmPassword.bind(this)}/>
                     <Form.Text className="text-muted">
                         {this.state.passwordMsg}
                     </Form.Text>
                 </Form.Group>
                 {this.ErrorText(this.state.ErrorText)}
-                <Button variant="primary" type="submit">
+                <Button variant="primary" onClick={this.submit.bind(this)}>
                     비밀번호 변경
                     </Button>
             </Form>

@@ -1,4 +1,4 @@
 import { combineReducers } from 'redux';
-import todo from './todo';
+import auth from './auth';
 // Merge multiple reducers in single reducer object (root reducer)
-export default combineReducers({todo});
+export default combineReducers({auth});

@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { NaverMap, Marker } from 'react-naver-maps';
 import $ from "jquery";
 import bsCustomFileInput from 'bs-custom-file-input'
+import * as request from '../../lib/request';
 
 class Create extends Component {
     constructor(props) {
@@ -12,15 +13,13 @@ class Create extends Component {
         this.form = {
             title: React.createRef(),
             content: React.createRef(),
-            media: React.createRef()
+            media: React.createRef(),
+            modal: React.createRef()
         }
         this.state = {
             show : true,
             media:[],
             selectedLocation:null
-        }
-        this.form = {
-            modal: React.createRef()
         }
         this.mapElement = (
             <NaverMap
@@ -29,7 +28,7 @@ class Create extends Component {
                     width: '100%',
                     height: '700px',
                 }}
-                defaultCenter={{ lat: 37.3595704, lng: 127.105399 }}
+                defaultCenter={{ lat:37.2830223, lng:127.0435122 }}
                 defaultZoom={15}
                 naverRef={ref => { this.mapRef = ref }}
             >
@@ -65,7 +64,13 @@ class Create extends Component {
         const content = this.form.content.current.value;
         //const media = this.form.media.current.value;
         //await this.props.onSubmit();
-        this.props.history.push("/");
+        let result = await request.CreateTip(title,content,this.state.media,this.state.selectedLocation);
+        if(result.status !== 200)
+        {
+            alert("Error!");
+            return;
+        }
+        this.props.history.push("/Board/");
     }
 
     cancel() {
