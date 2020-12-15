@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { local_login,local_logout } from '../actions/auth';
 
 //Backend는 3001port에서 동작중이므로 주소를 설정한다.
 const API_DEFAULT = "http://localhost:3001/";
@@ -22,9 +21,13 @@ export async function getMyList(page) {
 }
 //GET을 통해 review 정보들을 읽어온다.
 export async function getView(id) {
-    //const result = await instance.get('/Board/'+page);
-    //return result.data;
-    return{data:{_id:0, title:"test1",content:"Content", media:[]}};
+    const result = await instance.get('/api/board/view?id='+id)
+    .catch(function (error) {
+        if(error.response.status !== 200)
+            alert(error.data.err);
+    });
+    console.log(result.data);
+    return result.data;
 }
 export async function getTipsByGeo(location, zoomLevel)
 {

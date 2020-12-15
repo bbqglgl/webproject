@@ -45,7 +45,7 @@ class Board extends Component {
                 <InputGroup className="mb-3">
                     <FormControl placeholder="검색할 제목을 입력하세요." ref={this.form.searchText} />
                     <InputGroup.Append>
-                        <Button variant="outline-secondary" onClick={this.Search}>검색</Button>
+                        <Button variant="outline-secondary" onClick={this.Search.bind(this)}>검색</Button>
                     </InputGroup.Append>
                 </InputGroup>
                 <List data={this.state.list} />

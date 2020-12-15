@@ -14,13 +14,14 @@ class Board extends Component {
     }
     async componentDidMount() {
         const result = await request.getView(this.props.match.params.id);
-        this.setState({data:result.data});
+        this.setState({data:result});
     }
 
     render() {
         return (
             <Container>
-                <ViewCard data={this.state.data} />
+                {console.log(this.state.data)}
+                <ViewCard tip={this.state.data} />
             </Container>
         );
     }

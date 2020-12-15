@@ -10,7 +10,6 @@ class List extends Component {
         };
     }
     static getDerivedStateFromProps(nextProps, prevState) {
-        console.log(nextProps.data);
         return {
          tips:nextProps.data
         };

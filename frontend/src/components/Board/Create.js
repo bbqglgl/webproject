@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { InputGroup, FormControl, Button, Form, Image, Modal, Card, ListGroup } from 'react-bootstrap';
+import { InputGroup, FormControl, Button, Image, Modal, ListGroup } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
-import { NaverMap, Marker } from 'react-naver-maps';
+import { NaverMap } from 'react-naver-maps';
 import $ from "jquery";
-import bsCustomFileInput from 'bs-custom-file-input'
 import * as request from '../../lib/request';
 
 class Create extends Component {
@@ -32,7 +31,7 @@ class Create extends Component {
                 defaultZoom={15}
                 naverRef={ref => { this.mapRef = ref }}
             >
-            <img width="30px" height="30px" src="/marker.png" style={{position: 'absolute', 'z-index': '100', margin: '-30px 0 0 -15px', padding: '0px', 'pointer-events': 'none', 'left': '50%', top: '50%'}}/>
+            <img alt="goodimage" width="30px" height="30px" src="/marker.png" style={{position: 'absolute', 'z-index': '100', margin: '-30px 0 0 -15px', padding: '0px', 'pointer-events': 'none', 'left': '50%', top: '50%'}}/>
             </NaverMap>);
     }
     componentDidMount() {

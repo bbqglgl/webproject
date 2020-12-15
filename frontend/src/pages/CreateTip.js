@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import Create from '../components/Board/Create';
-import * as request from '../lib/request';
 
 class CreateTip extends Component {
     constructor(props) {
@@ -13,11 +12,6 @@ class CreateTip extends Component {
             content:"",
             media:[]
         };
-    }
-
-    createNewTip(title, content, media)
-    {
-        
     }
 
     render() {

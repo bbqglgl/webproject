@@ -4,6 +4,10 @@ const upload = require('../fileupload');
 const multer = require('multer');
 const Tip = require('../models/tip');
 
+var zoomStart = 8;
+var distanceMulti = [467.407792,126.382484,63.603235,15.979931,7.995720,3.997926,1.999654,1.000000,0.500040,0.250030,0.125016,0.062512,0.031256,0.015626];
+
+
 router.post('/create', function (req, res, next) {
     console.log(req.session.user_id);
     upload(req, res, function (err) {
@@ -61,11 +65,12 @@ router.get('/geoMarker', async function (req, res, next) {
     let zoom = req.query.zoom;
     let lat = req.query.lat;
     let lng = req.query.lng;
+    let mul = distanceMulti[zoom - zoomStart];
     let outList = [];
     await Tip.find({
         location : {
             $near : {
-                $maxDistance : 1000,
+                $maxDistance : 1500 * mul,
                 $geometry : {
                     type: "Point",
                     coordinates: [lng, lat]
@@ -86,11 +91,12 @@ router.get('/geoList', async function (req, res, next) {
     let zoom = req.query.zoom;
     let lat = req.query.lat;
     let lng = req.query.lng;
+    let mul = distanceMulti[zoom - zoomStart];
     let outList = [];
     await Tip.find({
         location : {
             $near : {
-                $maxDistance : 100,
+                $maxDistance : 228.111571 * mul,
                 $geometry : {
                     type: "Point",
                     coordinates: [lng, lat]
@@ -130,5 +136,18 @@ router.get('/', async function (req, res, next) {
     return res.status(200).json({ list: outList, totalPages: totalPages }).end();
 });
 
+router.get('/view', async function (req, res, next) {
+    let id = parseInt(req.query.id);
+    let out = null;
+    await Tip.find({ _id: id }).then((tips) => {
+        if(tips.length < 1)
+            return res.status(404).json({err:"잘못된 접근입니다."}).end();
+            out = tips[0];
+    }).catch((err) => {
+        console.log(err);
+        return res.status(500).json({err:"서버 오류. 관리자에게 문의하세요."}).end();
+    });
+    return res.status(200).json(out).end();
+});
 
 module.exports = router;

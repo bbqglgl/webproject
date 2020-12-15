@@ -5,7 +5,6 @@ import reducers from './reducers';
 import { Provider } from 'react-redux'
 import './index.css';
 import App from './App';
-import { RenderAfterNavermapsLoaded } from 'react-naver-maps';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(

@@ -34,6 +34,7 @@ app.use(session({ secret: 'BiiiiigMouse', resave: false, saveUninitialized: fals
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.set("etag", false);
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 app.use(cors(corsOptions));
 app.use(logger('dev'));

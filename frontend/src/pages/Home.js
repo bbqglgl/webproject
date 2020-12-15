@@ -5,7 +5,7 @@ import { NaverMap } from 'react-naver-maps';
 import List from '../components/Map/List';
 import * as request from '../lib/request';
 import $ from "jquery";
-var gridSize = 100;
+var gridSize = 130;
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +20,6 @@ class Home extends Component {
     handleOpen = () => this.setState({show:true});
 
     render() {
-        const navermaps = window.naver.maps;
         return (
             <Container>
                 <NaverMap
@@ -96,7 +95,7 @@ class Home extends Component {
         
         let mapRef = window.naver.maps;
         let instance = this.mapRef.instance;
-        var locationBtnHtml = '<a href="#" class="btn_mylct"><img width="30px" height="30px" src="./gps_marker.png"></a>';
+        var locationBtnHtml = '<a href="#" class="btn_mylct"><img width="30px" height="30px" src="./gps.png"></a>';
 
         mapRef.Event.once(instance, 'init_stylemap', function () {
             //customControl 객체 이용하기
@@ -127,6 +126,7 @@ class Home extends Component {
                 }, (e)=>{console.log(e)}, options)
             });
         });
+        
         mapRef.Event.addListener(instance, 'dragend', ()=>this.dragHandler(instance));
         //this.setMyCurrentLocation();
         let result = await request.getMarkerByGeo(instance.getCenter(), instance.getZoom());
